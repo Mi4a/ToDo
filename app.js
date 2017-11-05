@@ -36,13 +36,7 @@ db.sequelize.authenticate()
         console.error('Unable to connect to the database:', err);
     });
 
-/*db.user.sync({force: true}).then(() => {
-    // Table created
-    return db.user.create({
-        username: 'Dimon',
-        password: '1234'
-    });
-});*/
+db.user.findOne({ where: {username: 'Dimon'} }).then(dim => console.log(dim));
 
 app.use('/', index);
 app.use('/users', users);

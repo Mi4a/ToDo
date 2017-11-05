@@ -10,4 +10,5 @@ app.controller('loginPathController', function ($scope, $location, $cookieStore,
     $scope.login = function () {
 
 
+
     };
