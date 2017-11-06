@@ -3,20 +3,20 @@ const app = angular.module('app',['ngRoute', 'ngCookies']);
 app.config(function($routeProvider){
     $routeProvider
         .when('/', {
-            templateUrl: 'public/HTML/start.html',
+            templateUrl: '../HTML/start.html',
             controller: ""
         })
         .when('/todo', {
-            templateUrl: 'public/HTML/todoListTemplate.html',
+            templateUrl: '../HTML/todoListTemplate.html',
             controller: ""
         })
         .when('/:id', {
-                templateUrl: 'public/HTML/newTodoTemplate',
+                templateUrl: '../HTML/newTodoTemplate',
                 controller: ""
             }
         )
         .when('/new', {
-                templateUrl: 'public/HTML/newTodoTemplate',
+                templateUrl: '../HTML/newTodoTemplate',
                 controller: ""
             }
         )

@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport   = require('passport');
@@ -17,7 +16,6 @@ const app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
@@ -26,7 +24,7 @@ app.use(expressSession({
     resave: true,
     saveUninitialized: true
 }));
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 db.sequelize.authenticate()
     .then(() => {
@@ -36,13 +34,12 @@ db.sequelize.authenticate()
         console.error('Unable to connect to the database:', err);
     });
 
-db.user.findOne({ where: {username: 'Dimon'} }).then(dim => console.log(dim));
+//db.user.findOne({ where: {username: 'Dimon'} }).then(dim => console.log(dim.dataValues));
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', index);
 app.use('/users', users);
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use(function (req, res, next) {
     if (req.isAuthenticated()) next();

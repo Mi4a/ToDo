@@ -9,16 +9,16 @@ router.post('/registration', function(req, res, next) {
     console.log(req.body);
     /*    var newHash = md5(req.body.name + req.body.password + 'snif');*/
 
-    let user = {
+    let newUser = {
         username: req.body.name,
         password: req.body.password
     };
 
-    db.user.findOne({where: {username: req.body.name}}).then((name) => {
-      if (name) {
-          res.send('user already exist');
+    db.user.findOne({where: {username: req.body.name}}).then((user) => {
+      if (user === null) {
+          db.user.create(newUser).then(res.sendStatus(200));
       } else {
-          db.user.create(user)
+          res.sendStatus(401);
       }
     });
 });
@@ -27,11 +27,15 @@ passport.use(new LocalStrategy(
     function (username, password, done) {
         db.user.findOne({where: {username: username, password: password}})
             .then((user) => {
-            if (user) {
+            /*if (user) {
                 return done(null, user.dataValues);
             } else {
                 return done(null, false, { message: 'Incorrect username or password.' });
-            }
+            }*/
+            if (user === null) { return done(null, false, { message: 'no such user'}); }
+            if (!user) { return done(null, false); }
+            if (!user.dataValues.verifyPassword(password)) { return done(null, false); }
+            return done(null, user);
         });
     }
 ));
@@ -43,8 +47,8 @@ passport.serializeUser(function (user, done) {
 passport.deserializeUser(function (id, done) {
     db.user.findOne({where:{id: id}})
         .then(user => {
-            if (user) {
-                done(null, user);
+            if (user !== null) {
+                done(null, user.dataValues);
             } else {
                 return done(null, false, { message: 'Deserialize went wrong' });
             }
@@ -52,6 +56,7 @@ passport.deserializeUser(function (id, done) {
 });
 
 router.post('/login', function(req, res, next) {
+    console.log('login request: ', req.body);
     passport.authenticate('local', function(err, user, info) {
         if (err) return next(err); // will generate a 500 error
 
