@@ -18,7 +18,7 @@ app.controller('regController', function ($scope, $location, $http, $rootScope) 
 
         if ($scope.password === $scope.checkPassword){
             let data = $.param({
-                name: $scope.username,
+                username: $scope.username,
                 password: $scope.password
             });
             let config = {
@@ -36,6 +36,7 @@ app.controller('regController', function ($scope, $location, $http, $rootScope) 
                 }, function error(data) {
                     $scope.dataLoading = false;
                     console.log(data.statusText);
+                    alert('User already exist');
                 })} else {
             alert ('Passwords don`t match. Try enter it one more time!');
             $scope.dataLoading = false;

@@ -1,0 +1,35 @@
+<h2>{{userName}}`s Todo List</h2>
+<div class = "topic" ng-controller = "todoListController">
+    <div class="row">
+        <button type="button"  class = "btn btn-primary" ng-click = "createNewTodo()">Add Todo</button>
+    </div>
+    <div class = "row">
+        <div class="col-lg-6">
+            <div class="input-group">
+                <input  style="margin: 10px" type="text" class="form-control" placeholder="Search for..." ng-model="findText">
+                <span class="input-group-btn">
+                 <button  style="margin: 10px" class="btn btn-secondary" type="button" ng-click="find()">Go!</button>
+                </span>
+            </div>
+        </div>
+    </div>
+    <ul class = "list-group">
+        <li ng-repeat = "todo in todoList" class="list-group-item">
+            <div class = "panel panel-default" style="margin: auto">
+                <div class = "panel-heading">
+                    <label class="btn btn-primary">
+                        <input type="checkbox" autocomplete="off">
+                    </label>
+                </div>
+                <div  class = "panel-body">
+                    <div class = "row">
+                        <p class = "col-md-8">{{todo.description}}</p>
+                    </div>
+                    <button class="btn btn-success" ng-click="editTodo(todo.id)">Look</button>
+
+                </div>
+            </div>
+        </li>
+    </ul>
+
+</div>

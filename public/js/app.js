@@ -41,7 +41,7 @@ app.controller('loginController', function ($scope, $location, $cookieStore, $ro
     $scope.login = function () {
 
         let data = $.param({
-            name: $scope.username,
+            username: $scope.username,
             password: $scope.password
         });
 
@@ -109,7 +109,7 @@ app.controller('regController', function ($scope, $location, $http, $rootScope) 
 
         if ($scope.password === $scope.checkPassword){
             let data = $.param({
-                name: $scope.username,
+                username: $scope.username,
                 password: $scope.password
             });
             let config = {
@@ -134,3 +134,9 @@ app.controller('regController', function ($scope, $location, $http, $rootScope) 
     };
 });
 
+app.controller("todoListController", function ($scope, $http, $location, $rootScope) {
+    let todoList = [];
+    let userName = $rootScope.userName || 'Someone';
+    $http.get('/' + $rootScope.userName)
+        .then(response => todoList = response.data, error => console.log("Shit heppens"));
+});

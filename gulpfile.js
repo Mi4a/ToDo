@@ -4,6 +4,7 @@ const gulp = require('gulp'),
     concat = require('gulp-concat'),
     wrap = require('gulp-wrap'),
     del = require('del');
+    db = require('./dbModels');
 
 const WRAP_TEMPLATE = '(function(){\n"use strict";\n<%= contents %>\n})();';
 
@@ -30,6 +31,20 @@ gulp.task('db:start', function() {
     });
 
     connection.end();
+
+});
+
+gulp.task('db:sync', function () {
+    db.user.sync({force: true}).then(() => {
+        return db.user.create({
+            username: 'Dimon',
+            password: '1234'
+        });
+    });
+
+    db.todo.sync({force: true}).then(() => {
+        console.log('tables created');
+    });
 });
 
 gulp.task('db:drop', function () {

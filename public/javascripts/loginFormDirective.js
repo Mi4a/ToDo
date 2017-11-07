@@ -17,7 +17,7 @@ app.controller('loginController', function ($scope, $location, $cookieStore, $ro
     $scope.login = function () {
 
         let data = $.param({
-            name: $scope.username,
+            username: $scope.username,
             password: $scope.password
         });
 
@@ -32,6 +32,7 @@ app.controller('loginController', function ($scope, $location, $cookieStore, $ro
             .then(function success(user) {
                     if (data !== []) {
                         $rootScope.userName = user.data.username;
+                        console.log(user);
                         $rootScope.isLogin = true;
                         $scope.dataLoading = false;
                         $location.path('/');

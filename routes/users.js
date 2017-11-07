@@ -1,22 +1,26 @@
 const express = require('express'),
     passport = require('passport'),
-    /*    md5 = require('md5'),*/
     db = require('../dbModels'),
     LocalStrategy = require('passport-local').Strategy,
     router = express.Router();
 
 router.post('/registration', function(req, res, next) {
     console.log(req.body);
-    /*    var newHash = md5(req.body.name + req.body.password + 'snif');*/
 
     let newUser = {
-        username: req.body.name,
+        username: req.body.username,
         password: req.body.password
     };
 
-    db.user.findOne({where: {username: req.body.name}}).then((user) => {
+    db.user.findOne({where: {username: req.body.username}}).then((user) => {
       if (user === null) {
-          db.user.create(newUser).then(res.sendStatus(200));
+          db.user.create(newUser).then(res.json({
+              success: true,
+              data: {
+                  message: 'Registration succeeded',
+                  user: user
+              }
+          }));
       } else {
           res.sendStatus(401);
       }
@@ -25,6 +29,7 @@ router.post('/registration', function(req, res, next) {
 
 passport.use(new LocalStrategy(
     function (username, password, done) {
+        console.log('LocalStrategy check:', username, password);
         db.user.findOne({where: {username: username, password: password}})
             .then((user) => {
             /*if (user) {
@@ -34,7 +39,7 @@ passport.use(new LocalStrategy(
             }*/
             if (user === null) { return done(null, false, { message: 'no such user'}); }
             if (!user) { return done(null, false); }
-            if (!user.dataValues.verifyPassword(password)) { return done(null, false); }
+            console.log('localStrategy find:', user.dataValues);
             return done(null, user);
         });
     }
@@ -58,6 +63,7 @@ passport.deserializeUser(function (id, done) {
 router.post('/login', function(req, res, next) {
     console.log('login request: ', req.body);
     passport.authenticate('local', function(err, user, info) {
+        console.log('auth start');
         if (err) return next(err); // will generate a 500 error
 
         // Generate a JSON response reflecting authentication status
@@ -73,7 +79,7 @@ router.post('/login', function(req, res, next) {
 
         req.logIn(user, function(err) {
             if (err) return next(err);
-
+            console.log(user);
             res.json({
                 success: true,
                 data: {

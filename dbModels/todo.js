@@ -1,6 +1,6 @@
 module.exports = function(sequelize, Sequelize) {
 
-    let User = sequelize.define('user', {
+    let Todo = sequelize.define('todo', {
 
         id: {
             autoIncrement: true,
@@ -13,13 +13,13 @@ module.exports = function(sequelize, Sequelize) {
             notEmpty: true
         },
 
-        password: {
+        description: {
             type: Sequelize.STRING,
             allowNull: false
-        },
+        }
 
     });
 
-    return User;
+    return Todo;
 
 };
