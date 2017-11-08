@@ -1,3 +1,22 @@
+const app = angular.module('app',['ngRoute', 'ngResource']);
+
+app.config(function($routeProvider){
+    $routeProvider
+        .when('/', {
+            templateUrl: '../HTML/start.html',
+            controller: ""
+        })
+        .when('/todo', {
+            templateUrl: '../HTML/todoListTemplate.html',
+            controller: ""
+        })
+        .when('/new', {
+            templateUrl: '../HTML/newTodoTemplate.html',
+            controller: ""
+            }
+        )
+        .otherwise({ redirectTo: '/' });
+});
 app.directive("loginForm", function() {
     return {
         restrict : 'E',
@@ -86,4 +105,83 @@ app.controller('loginController', function ($scope, $location, $rootScope, $http
                 console.log("Logout went wrong");
             });
     };
+});
+app.controller("newTodoController", function ($scope, $http, $location, $rootScope) {
+
+    $scope.todoId = $rootScope.todoId || false;
+    $scope.newTodo = "";
+    $scope.username = $rootScope.userName || false;
+
+    $scope.cancel = function () {
+        $location.path('/todo');
+    };
+
+    $scope.createNewTodo = function () {
+        let newData = {
+            username: $scope.username,
+            description: $scope.newTodo
+        };
+        if($scope.todoId) newData.id = $scope.todoId;
+        let data = $.param(newData);
+
+        let config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+            }
+        };
+        $http.post('/todo', data, config)
+            .then(function success(response) {
+                console.log(response);
+                $scope.newTodo = "";
+                alert('New Todo added!')
+                },
+                function error(error) {
+                    console.log(error);
+                    alert("New Todo not added! Sorry!")
+                });
+
+    }
+
+});
+app.controller("todoListController", function ($scope, $http, $location, $rootScope) {
+    $scope.todoList = [];
+    $scope.userName = $rootScope.userName || 'Someones';
+    $http.get('/todo/' + $scope.userName)
+        .then(response => {
+            console.log(response.data.data.todo);
+            $scope.todoList = response.data.data.todo;
+            },
+            error => console.log("Shit heppends"));
+
+    $scope.createNewTodo = function () {
+        $location.path('/new');
+    };
+
+    $scope.editTodo = function (id) {
+        $rootScope.todoId = id;
+        $location.path('/new')
+    };
+
+    $scope.delete = function (id) {
+
+        let data = $.param({
+            username: $scope.userName,
+            id: id
+        });
+
+        let config = {
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+            }
+        };
+
+        $http.post('/todo/delete', data, config)
+            .then(function success(res) {
+                console.log(res);
+                alert('Todo deleted!');
+            },  function error(error) {
+                console.log(error);
+                alert("We cant delete this")
+            })
+    }
 });

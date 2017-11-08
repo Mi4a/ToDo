@@ -2,11 +2,9 @@ const gulp = require('gulp'),
     mysql = require('mysql2'),
     plumber = require('gulp-plumber'),
     concat = require('gulp-concat'),
-    wrap = require('gulp-wrap'),
-    del = require('del');
-    db = require('./dbModels');
-
-const WRAP_TEMPLATE = '(function(){\n"use strict";\n<%= contents %>\n})();';
+    del = require('del'),
+    db = require('./dbModels'),
+    minify = require('gulp-minify');
 
 gulp.task('db:start', function() {
 
@@ -66,10 +64,15 @@ gulp.task('db:drop', function () {
 });
 
 gulp.task('js:build', function() {
-    gulp.src('public/javascripts/*.js')
+    gulp.src(['public/javascripts/routes.js', 'public/javascripts/loginFormDirective.js','public/javascripts/newTodoController.js','public/javascripts/todoListController.js',])
         .pipe(plumber())
         .pipe(concat('app.js'))
-        .pipe(wrap(WRAP_TEMPLATE))
+        .pipe(minify({
+            ext:{
+                src:'-debug.js',
+                min:'.js'
+            }
+        }))
         .pipe(gulp.dest('public/js/'));
 });
 

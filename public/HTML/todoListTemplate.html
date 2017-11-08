@@ -18,14 +18,14 @@
             <div class = "panel panel-default" style="margin: auto">
                 <div class = "panel-heading">
                     <label class="btn btn-primary">
-                        <input type="checkbox" autocomplete="off">
+                        <button class="btn btn-alert" ng-click="delete(todo.id)">Delete</button>
                     </label>
                 </div>
                 <div  class = "panel-body">
                     <div class = "row">
                         <p class = "col-md-8">{{todo.description}}</p>
                     </div>
-                    <button class="btn btn-success" ng-click="editTodo(todo.id)">Look</button>
+                    <button class="btn btn-success" ng-click="editTodo(todo.id)">Edit</button>
 
                 </div>
             </div>

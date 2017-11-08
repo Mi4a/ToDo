@@ -18,7 +18,7 @@ router.post('/registration', function(req, res, next) {
               success: true,
               data: {
                   message: 'Registration succeeded',
-                  user: user
+                  user: user.dataValues
               }
           }));
       } else {
@@ -27,16 +27,11 @@ router.post('/registration', function(req, res, next) {
     });
 });
 
-passport.use(new LocalStrategy(
+passport.use('local', new LocalStrategy(
     function (username, password, done) {
         console.log('LocalStrategy check:', username, password);
         db.user.findOne({where: {username: username, password: password}})
             .then((user) => {
-            /*if (user) {
-                return done(null, user.dataValues);
-            } else {
-                return done(null, false, { message: 'Incorrect username or password.' });
-            }*/
             if (user === null) { return done(null, false, { message: 'no such user'}); }
             if (!user) { return done(null, false); }
             console.log('localStrategy find:', user.dataValues);
@@ -46,13 +41,16 @@ passport.use(new LocalStrategy(
 ));
 
 passport.serializeUser(function (user, done) {
-    done(null, user && user.id);
+    console.log('start serialize with user:', user);
+    done(null, user && user.dataValues.id);
 });
 
 passport.deserializeUser(function (id, done) {
+    console.log('deserialize start with id:', id);
     db.user.findOne({where:{id: id}})
         .then(user => {
             if (user !== null) {
+                console.log('deserialize user:', user.dataValues);
                 done(null, user.dataValues);
             } else {
                 return done(null, false, { message: 'Deserialize went wrong' });
@@ -63,7 +61,7 @@ passport.deserializeUser(function (id, done) {
 router.post('/login', function(req, res, next) {
     console.log('login request: ', req.body);
     passport.authenticate('local', function(err, user, info) {
-        console.log('auth start');
+        console.log('auth done');
         if (err) return next(err); // will generate a 500 error
 
         // Generate a JSON response reflecting authentication status
@@ -79,7 +77,7 @@ router.post('/login', function(req, res, next) {
 
         req.logIn(user, function(err) {
             if (err) return next(err);
-            console.log(user);
+            console.log(user.dataValues);
             res.json({
                 success: true,
                 data: {

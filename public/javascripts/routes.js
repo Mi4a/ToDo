@@ -1,4 +1,4 @@
-const app = angular.module('app',['ngRoute', 'ngCookies']);
+const app = angular.module('app',['ngRoute', 'ngResource']);
 
 app.config(function($routeProvider){
     $routeProvider
@@ -10,14 +10,9 @@ app.config(function($routeProvider){
             templateUrl: '../HTML/todoListTemplate.html',
             controller: ""
         })
-        .when('/:id', {
-                templateUrl: '../HTML/newTodoTemplate',
-                controller: ""
-            }
-        )
         .when('/new', {
-                templateUrl: '../HTML/newTodoTemplate',
-                controller: ""
+            templateUrl: '../HTML/newTodoTemplate.html',
+            controller: ""
             }
         )
         .otherwise({ redirectTo: '/' });

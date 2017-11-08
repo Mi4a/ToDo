@@ -34,7 +34,6 @@ db.sequelize.authenticate()
         console.error('Unable to connect to the database:', err);
     });
 
-//db.user.findOne({ where: {username: 'Dimon'} }).then(dim => console.log(dim.dataValues));
 app.use(passport.initialize());
 app.use(passport.session());
 
