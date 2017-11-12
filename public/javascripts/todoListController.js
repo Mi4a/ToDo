@@ -26,8 +26,8 @@ app.controller("todoListController", function ($scope, $location, $rootScope, $r
         $scope.delTodos.delete({id: todo.id}, function (res) {
             console.log(res);
             toastr.info('Todo deleted!', 'Information');
-            $scope.todoList.splice(index,1);
-        },  function error(error) {
+            $scope.todoList.splice(index, 1);
+        }, function error(error) {
             console.log(error);
             toastr.warning('We cant delete this', 'Warning');
         })

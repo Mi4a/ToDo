@@ -1,26 +1,27 @@
-const app = angular.module('app',['ngRoute', 'ngResource','ngAnimate', 'toastr']);
+const app = angular.module('app', ['ngRoute', 'route-segment', 'view-segment', 'ngResource', 'ngAnimate', 'toastr']);
 
-app.config(function($routeProvider){
-    $routeProvider
-        .when('/', {
-            templateUrl: '../HTML/start.html',
-            controller: ""
+app.config(function ($routeSegmentProvider) {
+    $routeSegmentProvider
+        .when('/', 'start')
+        .when('/todo', 'todo')
+        .when('/new', 'new')
+        .segment('start', {
+            default: true,
+            templateUrl: '../HTML/start.html'
         })
-        .when('/todo', {
+        .segment('todo', {
             templateUrl: '../HTML/todoListTemplate.html',
-            controller: ""
+            controller: 'todoListController'
         })
-        .when('/new', {
+        .segment('new', {
             templateUrl: '../HTML/newTodoTemplate.html',
-            controller: ""
-            }
-        )
-        .otherwise({ redirectTo: '/' });
+            controller: 'newTodoController'
+        })
 });
-app.directive("loginForm", function() {
+app.directive("loginForm", function () {
     return {
-        restrict : 'E',
-        templateUrl : '../HTML/loginTemplate.html',
+        restrict: 'E',
+        templateUrl: '../HTML/loginTemplate.html',
         controller: 'loginController',
         controllerAs: 'log'
     };
@@ -83,7 +84,7 @@ app.controller("newTodoController", function ($scope, $resource, $location, $roo
             username: $scope.username,
             description: $scope.newTodo
         };
-        if($scope.todoId) data.id = $scope.todoId;
+        if ($scope.todoId) data.id = $scope.todoId;
 
         $scope.userReg = $resource('/todo');
         $scope.userReg.save({}, data, function (res) {
@@ -126,18 +127,18 @@ app.controller("todoListController", function ($scope, $location, $rootScope, $r
         $scope.delTodos.delete({id: todo.id}, function (res) {
             console.log(res);
             toastr.info('Todo deleted!', 'Information');
-            $scope.todoList.splice(index,1);
-        },  function error(error) {
+            $scope.todoList.splice(index, 1);
+        }, function error(error) {
             console.log(error);
             toastr.warning('We cant delete this', 'Warning');
         })
     }
 });
 
-app.directive("logoutButton", function() {
+app.directive("logoutButton", function () {
     return {
-        restrict : 'E',
-        templateUrl : '../HTML/logoutButtonTemplate.html',
+        restrict: 'E',
+        templateUrl: '../HTML/logoutButtonTemplate.html',
         controller: 'logoutController'
     };
 });

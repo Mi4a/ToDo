@@ -1,7 +1,7 @@
-app.directive("logoutButton", function() {
+app.directive("logoutButton", function () {
     return {
-        restrict : 'E',
-        templateUrl : '../HTML/logoutButtonTemplate.html',
+        restrict: 'E',
+        templateUrl: '../HTML/logoutButtonTemplate.html',
         controller: 'logoutController'
     };
 });

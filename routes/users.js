@@ -4,7 +4,7 @@ const express = require('express'),
     LocalStrategy = require('passport-local').Strategy,
     router = express.Router();
 
-router.post('/registration', function(req, res, next) {
+router.post('/registration', function (req, res, next) {
     console.log(req.body);
 
     let newUser = {
@@ -13,11 +13,11 @@ router.post('/registration', function(req, res, next) {
     };
 
     db.user.findOne({where: {username: req.body.username}}).then((user) => {
-      if (user === null) {
-          db.user.create(newUser).then(res.json(200));
-      } else {
-          res.sendStatus(401);
-      }
+        if (user === null) {
+            db.user.create(newUser).then(res.json(200));
+        } else {
+            res.sendStatus(401);
+        }
     });
 });
 
@@ -26,11 +26,15 @@ passport.use('local', new LocalStrategy(
         console.log('LocalStrategy check:', username, password);
         db.user.findOne({where: {username: username, password: password}})
             .then((user) => {
-            if (user === null) { return done(null, false, { message: 'no such user'}); }
-            if (!user) { return done(null, false); }
-            console.log('localStrategy find:', user.dataValues);
-            return done(null, user);
-        });
+                if (user === null) {
+                    return done(null, false, {message: 'no such user'});
+                }
+                if (!user) {
+                    return done(null, false);
+                }
+                console.log('localStrategy find:', user.dataValues);
+                return done(null, user);
+            });
     }
 ));
 
@@ -41,20 +45,20 @@ passport.serializeUser(function (user, done) {
 
 passport.deserializeUser(function (id, done) {
     console.log('deserialize start with id:', id);
-    db.user.findOne({where:{id: id}})
+    db.user.findOne({where: {id: id}})
         .then(user => {
             if (user !== null) {
                 console.log('deserialize user:', user.dataValues);
                 done(null, user.dataValues);
             } else {
-                return done(null, false, { message: 'Deserialize went wrong' });
+                return done(null, false, {message: 'Deserialize went wrong'});
             }
         })
 });
 
-router.get('/login', function(req, res, next) {
+router.get('/login', function (req, res, next) {
     console.log('login request: ', req.params.username);
-    passport.authenticate('local', function(err, user, info) {
+    passport.authenticate('local', function (err, user, info) {
         console.log('auth done');
         if (err) return next(err);
 
@@ -68,7 +72,7 @@ router.get('/login', function(req, res, next) {
             });
         }
 
-        req.logIn(user, function(err) {
+        req.logIn(user, function (err) {
             if (err) return next(err);
             console.log(user.dataValues);
             res.json(user.dataValues);
@@ -76,9 +80,9 @@ router.get('/login', function(req, res, next) {
     })(req, res, next);
 });
 
-router.get('/logout', function(req, res){
+router.get('/logout', function (req, res) {
     req.logout();
-    res.json({ success: true });
+    res.json({success: true});
 });
 
 module.exports = router;

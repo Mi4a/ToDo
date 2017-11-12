@@ -1,7 +1,7 @@
-app.directive("loginForm", function() {
+app.directive("loginForm", function () {
     return {
-        restrict : 'E',
-        templateUrl : '../HTML/loginTemplate.html',
+        restrict: 'E',
+        templateUrl: '../HTML/loginTemplate.html',
         controller: 'loginController',
         controllerAs: 'log'
     };

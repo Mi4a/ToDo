@@ -6,15 +6,15 @@ const gulp = require('gulp'),
     db = require('./dbModels'),
     minify = require('gulp-minify');
 
-gulp.task('db:start', function() {
+gulp.task('db:start', function () {
 
     const connection = mysql.createConnection({
-        host     : 'localhost',
-        user     : 'admin',
-        password : 'admin'
+        host: 'localhost',
+        user: 'admin',
+        password: 'admin'
     });
 
-    connection.connect(function(err) {
+    connection.connect(function (err) {
         if (err) {
             console.error('error connecting: ' + err.stack);
             return;
@@ -47,15 +47,15 @@ gulp.task('db:sync', function () {
 
 gulp.task('db:drop', function () {
     const connection = mysql.createConnection({
-        host     : 'localhost',
-        user     : 'admin',
-        password : 'admin'
+        host: 'localhost',
+        user: 'admin',
+        password: 'admin'
     });
 
     connection.connect();
 
     //create database
-    connection.query('drop database todo', function(err) {
+    connection.query('drop database todo', function (err) {
         if (err) throw err;
         console.log(err);
     });
@@ -63,7 +63,7 @@ gulp.task('db:drop', function () {
     connection.end();
 });
 
-gulp.task('js:build', function() {
+gulp.task('js:build', function () {
     gulp.src(['public/javascripts/routes.js',
         'public/javascripts/loginFormDirective.js',
         'public/javascripts/newTodoController.js',
@@ -72,14 +72,14 @@ gulp.task('js:build', function() {
         .pipe(plumber())
         .pipe(concat('app.js'))
         .pipe(minify({
-            ext:{
-                src:'-debug.js',
-                min:'.js'
+            ext: {
+                src: '-debug.js',
+                min: '.js'
             }
         }))
         .pipe(gulp.dest('public/js/'));
 });
 
-gulp.task('clean', function() {
+gulp.task('clean', function () {
     return del.sync('public/js/');
 });

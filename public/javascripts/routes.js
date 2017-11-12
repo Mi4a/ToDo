@@ -1,19 +1,20 @@
-const app = angular.module('app',['ngRoute', 'ngResource','ngAnimate', 'toastr']);
+const app = angular.module('app', ['ngRoute', 'route-segment', 'view-segment', 'ngResource', 'ngAnimate', 'toastr']);
 
-app.config(function($routeProvider){
-    $routeProvider
-        .when('/', {
-            templateUrl: '../HTML/start.html',
-            controller: ""
+app.config(function ($routeSegmentProvider) {
+    $routeSegmentProvider
+        .when('/', 'start')
+        .when('/todo', 'todo')
+        .when('/new', 'new')
+        .segment('start', {
+            default: true,
+            templateUrl: '../HTML/start.html'
         })
-        .when('/todo', {
+        .segment('todo', {
             templateUrl: '../HTML/todoListTemplate.html',
-            controller: ""
+            controller: 'todoListController'
         })
-        .when('/new', {
+        .segment('new', {
             templateUrl: '../HTML/newTodoTemplate.html',
-            controller: ""
-            }
-        )
-        .otherwise({ redirectTo: '/' });
+            controller: 'newTodoController'
+        })
 });

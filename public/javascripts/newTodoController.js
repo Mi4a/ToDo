@@ -14,7 +14,7 @@ app.controller("newTodoController", function ($scope, $resource, $location, $roo
             username: $scope.username,
             description: $scope.newTodo
         };
-        if($scope.todoId) data.id = $scope.todoId;
+        if ($scope.todoId) data.id = $scope.todoId;
 
         $scope.userReg = $resource('/todo');
         $scope.userReg.save({}, data, function (res) {

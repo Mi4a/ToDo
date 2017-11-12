@@ -3,10 +3,10 @@ const router = express.Router();
 const db = require('../dbModels');
 const moment = require('moment');
 
-router.get('/favicon.ico', function(req, res, next) {
-  res.sendStatus(200);
+router.get('/favicon.ico', function (req, res, next) {
+    res.sendStatus(200);
 })
-    .get('/:username', function(req, res, next) {
+    .get('/:username', function (req, res, next) {
         let name = req.params.username;
         console.log('new request from:', name);
         db.todo.findAll({where: {username: name}}).then((todo) => {
@@ -22,18 +22,18 @@ router.get('/favicon.ico', function(req, res, next) {
             }
         });
     })
-    .post('/', function(req, res, next) {
+    .post('/', function (req, res, next) {
         console.log('NewTodo request with:', req.body);
 
         let newTodo = {
             username: req.body.username,
             description: req.body.description
         };
-        if(req.body.id) {
+        if (req.body.id) {
             newTodo.id = req.body.id;
 
-            db.todo.update({ description: newTodo.description }, { where: { id: newTodo.id } }).then((arr) => {
-                if (arr !== []){
+            db.todo.update({description: newTodo.description}, {where: {id: newTodo.id}}).then((arr) => {
+                if (arr !== []) {
                     console.log('todo updated');
                     res.json({
                         success: true,
@@ -62,11 +62,11 @@ router.get('/favicon.ico', function(req, res, next) {
             })
         }
     })
-    .delete('/:id', function(req, res) {
+    .delete('/:id', function (req, res) {
         console.log('delete request:', req.body);
 
         db.todo.destroy({where: {id: req.params.id}}).then(function (num) {
-            if(num){
+            if (num) {
                 res.json({
                     success: true,
                     data: {

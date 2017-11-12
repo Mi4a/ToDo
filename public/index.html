@@ -5,6 +5,7 @@
     <title>ToDo</title>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-route.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-route-segment/1.4.0/angular-route-segment.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-cookies.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.6.6/angular-resource.js"></script>
@@ -18,11 +19,10 @@
     <script defer="" src="js/app-debug.js"></script>
 </head>
 <body ng-app="app" class="container">
-<div id="toastjs"></div>
 <h1 class="display-1">Manage tour todo`s</h1>
 <aside>
     <login-form></login-form>
 </aside>
-<div ng-view="" class="container"></div>
+<div app-view-segment="0" class="container"></div>
 </body>
 </html>
