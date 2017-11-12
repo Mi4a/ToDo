@@ -1,4 +1,4 @@
-const app = angular.module('app',['ngRoute', 'ngResource']);
+const app = angular.module('app',['ngRoute', 'ngResource','ngAnimate', 'toastr']);
 
 app.config(function($routeProvider){
     $routeProvider

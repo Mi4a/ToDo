@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../dbModels');
+const moment = require('moment');
 
 router.get('/favicon.ico', function(req, res, next) {
   res.sendStatus(200);
@@ -11,6 +12,10 @@ router.get('/favicon.ico', function(req, res, next) {
         db.todo.findAll({where: {username: name}}).then((todo) => {
             if (todo !== null) {
                 console.log(todo);
+                todo.forEach((obj) => {
+                    let update = moment(obj.dataValues.updatedAt);
+                    obj.dataValues.spendTime = update.fromNow();
+                });
                 res.json(todo);
             } else {
                 res.sendStatus(401);

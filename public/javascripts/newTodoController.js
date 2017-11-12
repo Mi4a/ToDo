@@ -1,4 +1,4 @@
-app.controller("newTodoController", function ($scope, $resource, $location, $rootScope) {
+app.controller("newTodoController", function ($scope, $resource, $location, $rootScope, toastr) {
 
     $scope.todoId = $rootScope.todoId || false;
     $scope.newTodo = "";
@@ -20,11 +20,11 @@ app.controller("newTodoController", function ($scope, $resource, $location, $roo
         $scope.userReg.save({}, data, function (res) {
             console.log(res);
             $scope.newTodo = "";
-            alert('We write your ToDo');
+            toastr.success('We write your ToDo', 'All is OK!');
             $location.path('/todo');
         }, function (err) {
             console.log(err);
-            alert("New Todo not added! Sorry!")
+            toastr.error('New Todo not added! Sorry!', 'Error');
         })
     }
 

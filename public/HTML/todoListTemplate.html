@@ -13,7 +13,7 @@
             <div class = "panel panel-default" style="margin: auto">
                 <div  class = "panel-body">
                     <button class="btn btn-alert col-md-1" ng-click="delete(todo)">Delete</button>
-                    <p class = "col-md-10">{{todo.description}}</p>
+                    <p class = "col-md-9">{{todo.description}}</p><p class = "col-md-1">Created: {{todo.spendTime}}</p>
                     <button class="btn btn-success col-md-1" ng-click="editTodo(todo.id)">Edit</button>
                 </div>
             </div>

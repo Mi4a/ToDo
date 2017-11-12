@@ -6,7 +6,7 @@ app.directive("logoutButton", function() {
     };
 });
 
-app.controller('logoutController', function ($scope, $location, $resource, $rootScope) {
+app.controller('logoutController', function ($scope, $location, $resource, $rootScope, toastr) {
     $scope.logout = function () {
         $scope.logout = $resource('/users/logout');
         $scope.logout.get({}, function success() {
@@ -14,7 +14,7 @@ app.controller('logoutController', function ($scope, $location, $resource, $root
             $rootScope.userName = false;
             $location.path('/')
         }, function error() {
-            console.log("Logout went wrong");
+            toastr.error('Logout went wrong', 'Error');
         });
     };
 });

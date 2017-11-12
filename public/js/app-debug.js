@@ -1,4 +1,4 @@
-const app = angular.module('app',['ngRoute', 'ngResource']);
+const app = angular.module('app',['ngRoute', 'ngResource','ngAnimate', 'toastr']);
 
 app.config(function($routeProvider){
     $routeProvider
@@ -26,7 +26,7 @@ app.directive("loginForm", function() {
     };
 });
 
-app.controller('loginController', function ($scope, $location, $rootScope, $http, $resource) {
+app.controller('loginController', function ($scope, $location, $rootScope, $resource, toastr) {
 
     $scope.name = $rootScope.userName || false;
     $scope.username = "";
@@ -38,20 +38,18 @@ app.controller('loginController', function ($scope, $location, $rootScope, $http
         $scope.userLogin = $resource('/users/login');
         $scope.userLogin.get({username: $rootScope.username, password: $scope.password},
             function (res) {
-            console.log('res:', res);
                 if (res !== {}) {
                     $rootScope.userName = res.username;
-                    console.log($rootScope.userName);
                     $scope.dataLoading = false;
                     $location.path('/todo');
                 } else {
                     $scope.dataLoading = false;
-                    alert('Some error happened! Try enter login/password one more time!')
+                    toastr.error('Some error happened! Try enter login/password one more time!', 'Error');
                 }
             }, function (err) {
                 console.log(err);
                 $scope.dataLoading = false;
-                alert("Invalid login/password! Please try again!")
+                toastr.error('Invalid login/password! Please try again!', 'Error');
             })
     };
 
@@ -60,16 +58,16 @@ app.controller('loginController', function ($scope, $location, $rootScope, $http
         $scope.userReg = $resource('/users/registration');
         $scope.userReg.save({}, {username: $scope.username, password: $scope.password}, function (res) {
             console.log(res);
-            alert ('Thank you for registration!');
+            toastr.success('Thank you for registration!');
         }, function (err) {
             $scope.dataLoading = false;
             console.log(err);
-            alert('User already exist');
+            toastr.warning('User already exist', 'Warning');
         })
     };
 
 });
-app.controller("newTodoController", function ($scope, $resource, $location, $rootScope) {
+app.controller("newTodoController", function ($scope, $resource, $location, $rootScope, toastr) {
 
     $scope.todoId = $rootScope.todoId || false;
     $scope.newTodo = "";
@@ -91,49 +89,26 @@ app.controller("newTodoController", function ($scope, $resource, $location, $roo
         $scope.userReg.save({}, data, function (res) {
             console.log(res);
             $scope.newTodo = "";
-            alert('New Todo added!');
+            toastr.success('We write your ToDo', 'All is OK!');
             $location.path('/todo');
         }, function (err) {
             console.log(err);
-            alert("New Todo not added! Sorry!")
+            toastr.error('New Todo not added! Sorry!', 'Error');
         })
-
-/*        let newData = {
-            username: $scope.username,
-            description: $scope.newTodo
-        };
-        if($scope.todoId) newData.id = $scope.todoId;
-        let data = $.param(newData);
-
-        let config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-            }
-        };
-        $http.post('/todo', data, config)
-            .then(function success(response) {
-                console.log(response);
-                $scope.newTodo = "";
-                alert('New Todo added!');
-                $location.path('/todo');
-                },
-                function error(error) {
-                    console.log(error);
-                    alert("New Todo not added! Sorry!")
-                });*/
-
     }
 
 });
-app.controller("todoListController", function ($scope, $http, $location, $rootScope, $resource) {
+app.controller("todoListController", function ($scope, $location, $rootScope, $resource, toastr) {
     $scope.todoList = [];
     $scope.userName = $rootScope.userName || 'Someones';
 
     $scope.getTodos = $resource('/todo/:username');
     $scope.getTodos.query({username: $rootScope.userName}, function (res) {
         $scope.todoList = res;
+        console.log(res);
     }, function (err) {
         console.log(err);
+        toastr.error('We cant find your ToDO`s', 'Error');
     });
 
     $scope.createNewTodo = function () {
@@ -150,11 +125,11 @@ app.controller("todoListController", function ($scope, $http, $location, $rootSc
         $scope.delTodos = $resource('/todo/:id');
         $scope.delTodos.delete({id: todo.id}, function (res) {
             console.log(res);
-            alert('Todo deleted!');
+            toastr.info('Todo deleted!', 'Information');
             $scope.todoList.splice(index,1);
         },  function error(error) {
             console.log(error);
-            alert("We cant delete this")
+            toastr.warning('We cant delete this', 'Warning');
         })
     }
 });
@@ -167,7 +142,7 @@ app.directive("logoutButton", function() {
     };
 });
 
-app.controller('logoutController', function ($scope, $location, $resource, $rootScope) {
+app.controller('logoutController', function ($scope, $location, $resource, $rootScope, toastr) {
     $scope.logout = function () {
         $scope.logout = $resource('/users/logout');
         $scope.logout.get({}, function success() {
@@ -175,7 +150,7 @@ app.controller('logoutController', function ($scope, $location, $resource, $root
             $rootScope.userName = false;
             $location.path('/')
         }, function error() {
-            console.log("Logout went wrong");
+            toastr.error('Logout went wrong', 'Error');
         });
     };
 });
