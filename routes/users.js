@@ -18,7 +18,6 @@ router.post('/registration', function(req, res, next) {
               success: true,
               data: {
                   message: 'Registration succeeded',
-                  user: user.dataValues
               }
           }));
       } else {

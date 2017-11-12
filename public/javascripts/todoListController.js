@@ -1,4 +1,4 @@
-app.controller("todoListController", function ($scope, $http, $location, $rootScope) {
+app.controller("todoListController", function ($scope, $http, $location, $rootScope, $resource) {
     $scope.todoList = [];
     $scope.userName = $rootScope.userName || 'Someones';
     $http.get('/todo/' + $scope.userName)
@@ -17,11 +17,11 @@ app.controller("todoListController", function ($scope, $http, $location, $rootSc
         $location.path('/new')
     };
 
-    $scope.delete = function (id) {
+    $scope.delete = function (todo) {
 
         let data = $.param({
             username: $scope.userName,
-            id: id
+            id: todo.id
         });
 
         let config = {
@@ -30,10 +30,13 @@ app.controller("todoListController", function ($scope, $http, $location, $rootSc
             }
         };
 
+        let index = $scope.todoList.indexOf(todo);
+
         $http.post('/todo/delete', data, config)
             .then(function success(res) {
                 console.log(res);
                 alert('Todo deleted!');
+                $scope.todoList.splice(index,1);
             },  function error(error) {
                 console.log(error);
                 alert("We cant delete this")

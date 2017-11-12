@@ -25,7 +25,8 @@ app.controller("newTodoController", function ($scope, $http, $location, $rootSco
             .then(function success(response) {
                 console.log(response);
                 $scope.newTodo = "";
-                alert('New Todo added!')
+                alert('New Todo added!');
+                $location.path('/todo');
                 },
                 function error(error) {
                     console.log(error);

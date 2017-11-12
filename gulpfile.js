@@ -64,7 +64,11 @@ gulp.task('db:drop', function () {
 });
 
 gulp.task('js:build', function() {
-    gulp.src(['public/javascripts/routes.js', 'public/javascripts/loginFormDirective.js','public/javascripts/newTodoController.js','public/javascripts/todoListController.js',])
+    gulp.src(['public/javascripts/routes.js',
+        'public/javascripts/loginFormDirective.js',
+        'public/javascripts/newTodoController.js',
+        'public/javascripts/todoListController.js',
+        'public/javascripts/logoutButtonDirective.js'])
         .pipe(plumber())
         .pipe(concat('app.js'))
         .pipe(minify({
