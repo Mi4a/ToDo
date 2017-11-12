@@ -1,12 +1,13 @@
-app.controller("todoListController", function ($scope, $http, $location, $rootScope, $resource) {
+app.controller("todoListController", function ($scope, $location, $rootScope, $resource) {
     $scope.todoList = [];
     $scope.userName = $rootScope.userName || 'Someones';
-    $http.get('/todo/' + $scope.userName)
-        .then(response => {
-            console.log(response.data.data.todo);
-            $scope.todoList = response.data.data.todo;
-            },
-            error => console.log("Shit heppends"));
+
+    $scope.getTodos = $resource('/todo/:username');
+    $scope.getTodos.query({username: $rootScope.userName}, function (res) {
+        $scope.todoList = res;
+    }, function (err) {
+        console.log(err);
+    });
 
     $scope.createNewTodo = function () {
         $location.path('/new');
@@ -18,28 +19,15 @@ app.controller("todoListController", function ($scope, $http, $location, $rootSc
     };
 
     $scope.delete = function (todo) {
-
-        let data = $.param({
-            username: $scope.userName,
-            id: todo.id
-        });
-
-        let config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-            }
-        };
-
         let index = $scope.todoList.indexOf(todo);
-
-        $http.post('/todo/delete', data, config)
-            .then(function success(res) {
-                console.log(res);
-                alert('Todo deleted!');
-                $scope.todoList.splice(index,1);
-            },  function error(error) {
-                console.log(error);
-                alert("We cant delete this")
-            })
+        $scope.delTodos = $resource('/todo/:id');
+        $scope.delTodos.delete({id: todo.id}, function (res) {
+            console.log(res);
+            alert('Todo deleted!');
+            $scope.todoList.splice(index,1);
+        },  function error(error) {
+            console.log(error);
+            alert("We cant delete this")
+        })
     }
 });

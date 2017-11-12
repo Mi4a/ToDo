@@ -14,12 +14,7 @@ router.post('/registration', function(req, res, next) {
 
     db.user.findOne({where: {username: req.body.username}}).then((user) => {
       if (user === null) {
-          db.user.create(newUser).then(res.json({
-              success: true,
-              data: {
-                  message: 'Registration succeeded',
-              }
-          }));
+          db.user.create(newUser).then(res.json(200));
       } else {
           res.sendStatus(401);
       }
@@ -57,13 +52,12 @@ passport.deserializeUser(function (id, done) {
         })
 });
 
-router.post('/login', function(req, res, next) {
-    console.log('login request: ', req.body);
+router.get('/login', function(req, res, next) {
+    console.log('login request: ', req.params.username);
     passport.authenticate('local', function(err, user, info) {
         console.log('auth done');
-        if (err) return next(err); // will generate a 500 error
+        if (err) return next(err);
 
-        // Generate a JSON response reflecting authentication status
         if (!user) {
             return res.json({
                 success: false,
@@ -77,13 +71,7 @@ router.post('/login', function(req, res, next) {
         req.logIn(user, function(err) {
             if (err) return next(err);
             console.log(user.dataValues);
-            res.json({
-                success: true,
-                data: {
-                    message: 'Authentication succeeded',
-                    user: user
-                }
-            });
+            res.json(user.dataValues);
         });
     })(req, res, next);
 });

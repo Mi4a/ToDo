@@ -5,19 +5,13 @@ const db = require('../dbModels');
 router.get('/favicon.ico', function(req, res, next) {
   res.sendStatus(200);
 })
-    .get('/:id', function(req, res, next) {
-        let name = req.params.id;
+    .get('/:username', function(req, res, next) {
+        let name = req.params.username;
         console.log('new request from:', name);
         db.todo.findAll({where: {username: name}}).then((todo) => {
             if (todo !== null) {
                 console.log(todo);
-                res.json({
-                    success: true,
-                    data: {
-                        message: 'Todos find',
-                        todo: todo
-                    }
-                });
+                res.json(todo);
             } else {
                 res.sendStatus(401);
             }
@@ -63,14 +57,10 @@ router.get('/favicon.ico', function(req, res, next) {
             })
         }
     })
-    .post('/delete', function(req, res, next) {
+    .delete('/:id', function(req, res) {
         console.log('delete request:', req.body);
 
-        let delTodo = {
-            username: req.body.username,
-            id: req.body.id
-        };
-        db.todo.destroy({where: delTodo}).then(function (num) {
+        db.todo.destroy({where: {id: req.params.id}}).then(function (num) {
             if(num){
                 res.json({
                     success: true,

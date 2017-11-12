@@ -6,15 +6,15 @@ app.directive("logoutButton", function() {
     };
 });
 
-app.controller('logoutController', function ($scope, $location, $http, $rootScope) {
+app.controller('logoutController', function ($scope, $location, $resource, $rootScope) {
     $scope.logout = function () {
-        $http.get('/users/logout')
-            .then(function success() {
-                console.log("Logout succeed");
-                $rootScope.userName = false;
-                $location.path('/')
-            }, function error() {
-                console.log("Logout went wrong");
-            });
+        $scope.logout = $resource('/users/logout');
+        $scope.logout.get({}, function success() {
+            console.log("Logout succeed");
+            $rootScope.userName = false;
+            $location.path('/')
+        }, function error() {
+            console.log("Logout went wrong");
+        });
     };
 });

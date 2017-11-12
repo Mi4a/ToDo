@@ -1,4 +1,4 @@
-app.controller("newTodoController", function ($scope, $http, $location, $rootScope) {
+app.controller("newTodoController", function ($scope, $resource, $location, $rootScope) {
 
     $scope.todoId = $rootScope.todoId || false;
     $scope.newTodo = "";
@@ -9,30 +9,23 @@ app.controller("newTodoController", function ($scope, $http, $location, $rootSco
     };
 
     $scope.createNewTodo = function () {
-        let newData = {
+
+        let data = {
             username: $scope.username,
             description: $scope.newTodo
         };
-        if($scope.todoId) newData.id = $scope.todoId;
-        let data = $.param(newData);
+        if($scope.todoId) data.id = $scope.todoId;
 
-        let config = {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-            }
-        };
-        $http.post('/todo', data, config)
-            .then(function success(response) {
-                console.log(response);
-                $scope.newTodo = "";
-                alert('New Todo added!');
-                $location.path('/todo');
-                },
-                function error(error) {
-                    console.log(error);
-                    alert("New Todo not added! Sorry!")
-                });
-
+        $scope.userReg = $resource('/todo');
+        $scope.userReg.save({}, data, function (res) {
+            console.log(res);
+            $scope.newTodo = "";
+            alert('We write your ToDo');
+            $location.path('/todo');
+        }, function (err) {
+            console.log(err);
+            alert("New Todo not added! Sorry!")
+        })
     }
 
 });
