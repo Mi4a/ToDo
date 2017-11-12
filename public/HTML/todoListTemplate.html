@@ -8,8 +8,16 @@
         <input style="margin: 10px" type="text" class="form-control col-md-5" ng-model="findText">
         <span class="glyphicon glyphicon-search col-md-1"></span>
     </div>
+    <div class="form-group" >
+        <label for="sel1">Select list:</label>
+        <select class="form-control" id="sel1" ng-model="sort">
+            <option label="Latest first" value="-updatedAt">Latest first</option>
+            <option label="Oldest first" value="updatedAt">Oldest first</option>
+            <option label="Alphabetical" value="description">Alphabetical</option>
+        </select>
+    </div>
     <ul class = "list-group">
-        <li ng-repeat = "todo in todoList | filter : findText" class="list-group-item">
+        <li ng-repeat = "todo in todoList | filter : findText | orderBy : sort" class="list-group-item">
             <div class = "panel panel-default" style="margin: auto">
                 <div  class = "panel-body">
                     <button class="btn btn-alert col-md-1" ng-click="delete(todo)">Delete</button>
